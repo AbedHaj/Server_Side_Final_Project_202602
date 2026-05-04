@@ -1,0 +1,11 @@
+# Dependency folders
+node_modules/
+
+# Environment variables (Sensitive Data)
+.env
+
+# WebStorm / IDE specific files
+.idea/
+
+# Logs
+npm-debug.log*
