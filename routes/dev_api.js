@@ -8,9 +8,11 @@ const teamMembers = [
 
 // GET /api/about
 router.get('/about', (req, res) => {
+    req.log.info('Fetching team about details');
     try {
         res.status(200).json(teamMembers);
     } catch (error) {
+        req.log.error({ error: error.message }, 'Failed to retrieve team details');
         res.status(500).json({ id: 500, message: error.message });
     }
 });

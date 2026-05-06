@@ -7,6 +7,8 @@ const users = require('../models/users');
 const reports = require('../models/reports');
 
 router.post('/add', async (req, res) => {
+    req.log.info({ body: req.body }, 'Attempting to add a new cost');
+
     try {
         const { description, category, userid, sum } = req.body; // Remove 'date'
 
@@ -23,8 +25,10 @@ router.post('/add', async (req, res) => {
         // Log it
         await new logs({ action: 'POST /api/add', details: savedCost }).save();
 
+        req.log.info({ costId: savedCost._id }, 'Successfully added new cost');
         res.status(201).json(savedCost);
     } catch (error) {
+        req.log.error({ error: error.message }, 'Failed to add new cost');
         res.status(400).json({ error: error.message });
     }
 });
@@ -35,10 +39,11 @@ const teamMembers = [
     { first_name: "Lior", last_name: "Mizrahi" }
 ];
 router.get('/about', (req, res) => {
+    req.log.info('Fetching team about details');
     try {
-
         res.status(200).json(teamMembers);
     } catch (error) {
+        req.log.error({ error: error.message }, 'Failed to retrieve team details');
         res.status(500).json({
             error: "Failed to retrieve team details",
             details: error.message
@@ -48,6 +53,7 @@ router.get('/about', (req, res) => {
 
 // GET http://localhost:3000/api/users
 router.get('/users', async (req, res) => {
+    req.log.info('Fetching all users');
     try {
         // Fetch all documents from the 'users' collection
         const allUsers = await users.find({});
@@ -57,6 +63,7 @@ router.get('/users', async (req, res) => {
 
     } catch (error) {
         // If an error happens, return a JSON document describing the error
+        req.log.error({ error: error.message }, 'Failed to retrieve users list');
         res.status(500).json({
             error: "Failed to retrieve users list",
             details: error.message
@@ -66,6 +73,7 @@ router.get('/users', async (req, res) => {
 
 //http://localhost:3000/api/users/:id
 router.get('/users/:id', async (req, res) => {
+    req.log.info({ userId: req.params.id }, 'Fetching specific user details and total costs');
     try {
         // 1. Get the ID from the URL (e.g., 123123)
         const userIdParam = parseInt(req.params.id);
@@ -74,6 +82,7 @@ router.get('/users/:id', async (req, res) => {
         const userData = await users.findOne({ id: userIdParam });
 
         if (!userData) {
+            req.log.warn({ userId: userIdParam }, 'User not found');
             return res.status(404).json({ error: "User not found" });
         }
 
@@ -97,6 +106,7 @@ router.get('/users/:id', async (req, res) => {
 
     } catch (error) {
         // If an error happens, return a JSON document describing the error
+        req.log.error({ error: error.message }, 'Failed to retrieve user details');
         res.status(500).json({
             error: "Failed to retrieve user details",
             details: error.message
@@ -107,6 +117,7 @@ router.get('/users/:id', async (req, res) => {
 
 // http://localhost:3000/api/logs
 router.get('/logs', async (req, res) => {
+    req.log.info('Fetching all logs from the database');
     try {
         // Fetch all documents from the 'logs' collection
         const allLogs = await logs.find({});
@@ -116,6 +127,7 @@ router.get('/logs', async (req, res) => {
 
     } catch (error) {
         // Return JSON document describing the error
+        req.log.error({ error: error.message }, 'Failed to retrieve logs');
         res.status(500).json({
             error: "Failed to retrieve logs",
             details: error.message
@@ -127,12 +139,14 @@ router.get('/logs', async (req, res) => {
 // GET http://localhost:3000/api/report?id=123123&year=2025&month=11
 // ==========================================
 router.get('/report', async (req, res) => {
+    req.log.info({ query: req.query }, 'Generating report requested');
     try {
         const userid = parseInt(req.query.id);
         const year = parseInt(req.query.year);
         const month = parseInt(req.query.month);
 
         if (!userid || !year || !month) {
+            req.log.warn('Missing parameters for report generation');
             return res.status(400).json({ error: "Missing parameters" });
         }
 
@@ -143,7 +157,10 @@ router.get('/report', async (req, res) => {
 
         if (isPastMonth) {
             const savedReport = await reports.findOne({ userid, year, month });
-            if (savedReport) return res.status(200).json(savedReport);
+            if (savedReport) {
+                req.log.info('Returned cached report for past month');
+                return res.status(200).json(savedReport);
+            }
         }
 
         // --- THE "NO DATE FIELD" TRICK ---
@@ -183,11 +200,14 @@ router.get('/report', async (req, res) => {
 
         if (isPastMonth) {
             await new reports(generatedReport).save();
+            req.log.info('Saved new report for past month to cache');
         }
 
+        req.log.info('Successfully generated and returned report');
         res.status(200).json(generatedReport);
 
     } catch (error) {
+        req.log.error({ error: error.message }, 'Report generation error');
         res.status(500).json({ error: "Report error", details: error.message });
     }
 });
