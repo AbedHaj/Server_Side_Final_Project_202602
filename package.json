@@ -14,6 +14,12 @@
     "mongoose": "^9.6.1",
     "morgan": "~1.9.1",
     "pino": "^10.3.1",
+    "pino-http": "^11.0.0",
+    "pino-mongodb": "^5.0.0",
     "pug": "^2.0.0-beta11"
+  },
+  "devDependencies": {
+    "jest": "^30.4.1",
+    "supertest": "^7.2.2"
   }
 }

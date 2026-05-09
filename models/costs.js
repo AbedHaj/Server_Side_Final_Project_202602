@@ -15,7 +15,7 @@ const costsSchema = new mongoose.Schema({
         required: true
     },
     sum: {
-        type: Number, // Mongoose uses Number to handle Doubles/Floats
+        type: Number,
         required: true
     }
 });

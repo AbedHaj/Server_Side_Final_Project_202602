@@ -3,7 +3,7 @@ const router = express.Router();
 const users = require('../models/users');
 const costs = require('../models/costs');
 
-// POST /api/add (Add User)
+// POST /api/add (Add User) 3002
 router.post('/add', async (req, res) => {
     try {
         const { id, first_name, last_name, birthday } = req.body;

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const logs = require('../models/logs');
 
-// GET /api/logs
+// GET /api/logs 3001
 router.get('/logs', async (req, res) => {
     try {
         const allLogs = await logs.find({});

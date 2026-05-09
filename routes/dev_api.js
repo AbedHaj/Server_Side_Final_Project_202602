@@ -6,7 +6,7 @@ const teamMembers = [
     { first_name: "Lior", last_name: "Mizrahi" }
 ];
 
-// GET /api/about
+// GET /api/about 3004
 router.get('/about', (req, res) => {
     try {
         res.status(200).json(teamMembers);
