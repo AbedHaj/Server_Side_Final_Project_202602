@@ -7,6 +7,7 @@ const reports = require('../models/reports');
 
 // POST /api/add (Add Cost) 3003
 router.post('/add', async (req, res) => {
+    req.log.info({ body: req.body }, 'Attempting to add a new cost');
     try {
         const { description, category, userid, sum } = req.body;
         const newCost = new costs({ description, category, userid: Number(userid), sum: Number(sum) });
@@ -14,20 +15,24 @@ router.post('/add', async (req, res) => {
 
         await new logs({ action: 'POST /api/add', details: savedCost }).save();
 
+        req.log.info({ costId: savedCost._id }, 'Successfully added new cost');
         res.status(201).json(savedCost);
     } catch (error) {
+        req.log.error({ error: error.message }, 'Failed to add new cost');
         res.status(400).json({ id: 400, message: error.message });
     }
 });
 
 // GET /api/report
 router.get('/report', async (req, res) => {
+    req.log.info({ query: req.query }, 'Generating report requested');
     try {
         const userid = parseInt(req.query.id);
         const year = parseInt(req.query.year);
         const month = parseInt(req.query.month);
 
         if (!userid || !year || !month) {
+            req.log.warn('Missing parameters for report generation');
             return res.status(400).json({ id: 400, message: "Missing parameters" });
         }
 
@@ -36,7 +41,10 @@ router.get('/report', async (req, res) => {
 
         if (isPastMonth) {
             const savedReport = await reports.findOne({ userid, year, month });
-            if (savedReport) return res.status(200).json(savedReport);
+            if (savedReport) {
+                req.log.info('Returned cached report for past month');
+                return res.status(200).json(savedReport);
+            }
         }
 
         const startTimestamp = Math.floor(new Date(Date.UTC(year, month - 1, 1)).getTime() / 1000);
@@ -68,11 +76,14 @@ router.get('/report', async (req, res) => {
 
         if (isPastMonth) {
             await new reports(generatedReport).save();
+            req.log.info('Saved new report for past month to cache');
         }
 
+        req.log.info('Successfully generated and returned report');
         res.status(200).json(generatedReport);
 
     } catch (error) {
+        req.log.error({ error: error.message }, 'Report generation error');
         res.status(500).json({ id: 500, message: "Report error: " + error.message });
     }
 });
