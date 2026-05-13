@@ -3,12 +3,13 @@ const router = express.Router();
 const logs = require('../models/logs');
 
 // GET /api/logs 3001
-router.get('/logs', async (req, res) => {
+router.get('/logs', async (req, res, next) => {
+    req.log.info({ action: "GET /api/logs" }, 'Logs endpoint accessed');
     try {
         const allLogs = await logs.find({});
         res.status(200).json(allLogs);
     } catch (error) {
-        res.status(500).json({ id: 500, message: "Failed to retrieve logs: " + error.message });
+        next(error);
     }
 });
 
