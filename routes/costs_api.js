@@ -6,33 +6,46 @@ const logs = require('../models/logs');
 const reports = require('../models/reports');
 
 // POST /api/add (Add Cost) 3003
-router.post('/add', async (req, res) => {
+router.post('/add', async (req, res, next) => {
+    req.log.info({ action: "POST /api/add" }, 'Add Cost endpoint accessed');
     try {
         const { description, category, userid, sum } = req.body;
-        const newCost = new costs({ description, category, userid: Number(userid), sum: Number(sum) });
+        const newCost = new costs({
+            description,
+            category,
+            userid: Number(userid),
+            sum: Number(sum)
+        });
         const savedCost = await newCost.save();
-
-        await new logs({ action: 'POST /api/add', details: savedCost }).save();
 
         res.status(201).json(savedCost);
     } catch (error) {
-        res.status(400).json({ id: 400, message: error.message });
+        error.status = 400;
+        next(error);
     }
 });
 
 // GET /api/report
-router.get('/report', async (req, res) => {
-    try {
-        const userid = parseInt(req.query.id);
-        const year = parseInt(req.query.year);
-        const month = parseInt(req.query.month);
+router.get('/report', async (req, res, next) => {
+    const userid = parseInt(req.query.id);
+    const year = parseInt(req.query.year);
+    const month = parseInt(req.query.month);
 
+    req.log.info({
+        action: "GET /api/report",
+        params: { userid, year, month }
+    }, 'Report endpoint accessed');
+
+    try {
         if (!userid || !year || !month) {
-            return res.status(400).json({ id: 400, message: "Missing parameters" });
+            const err = new Error("Missing parameters");
+            err.status = 400;
+            return next(err);
         }
 
         const currentDate = new Date();
-        const isPastMonth = (year < currentDate.getFullYear()) || (year === currentDate.getFullYear() && month < (currentDate.getMonth() + 1));
+        const isPastMonth = (year < currentDate.getFullYear()) ||
+            (year === currentDate.getFullYear() && month < (currentDate.getMonth() + 1));
 
         if (isPastMonth) {
             const savedReport = await reports.findOne({ userid, year, month });
@@ -71,9 +84,8 @@ router.get('/report', async (req, res) => {
         }
 
         res.status(200).json(generatedReport);
-
     } catch (error) {
-        res.status(500).json({ id: 500, message: "Report error: " + error.message });
+        next(error);
     }
 });
 

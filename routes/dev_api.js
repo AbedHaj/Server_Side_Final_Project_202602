@@ -7,11 +7,12 @@ const teamMembers = [
 ];
 
 // GET /api/about 3004
-router.get('/about', (req, res) => {
+router.get('/about', (req, res, next) => {
+    req.log.info({ action: "GET /api/about" }, 'About endpoint accessed');
     try {
         res.status(200).json(teamMembers);
     } catch (error) {
-        res.status(500).json({ id: 500, message: error.message });
+        next(error);
     }
 });
 

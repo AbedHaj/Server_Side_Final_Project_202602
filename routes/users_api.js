@@ -4,35 +4,41 @@ const users = require('../models/users');
 const costs = require('../models/costs');
 
 // POST /api/add (Add User) 3002
-router.post('/add', async (req, res) => {
+router.post('/add', async (req, res, next) => {
+    req.log.info({ action: "POST /api/add" }, 'Add User endpoint accessed');
     try {
         const { id, first_name, last_name, birthday } = req.body;
         const newUser = new users({ id: Number(id), first_name, last_name, birthday: new Date(birthday) });
         const savedUser = await newUser.save();
         res.status(201).json(savedUser);
     } catch (error) {
-        res.status(400).json({ id: 400, message: error.message });
+        error.status = 400;
+        next(error);
     }
 });
 
 // GET /api/users
-router.get('/users', async (req, res) => {
+router.get('/users', async (req, res, next) => {
+    req.log.info({ action: "GET /api/users" }, 'Get Users endpoint accessed');
     try {
         const allUsers = await users.find({});
         res.status(200).json(allUsers);
     } catch (error) {
-        res.status(500).json({ id: 500, message: error.message });
+        next(error);
     }
 });
 
 // GET /api/users/:id
-router.get('/users/:id', async (req, res) => {
+router.get('/users/:id', async (req, res, next) => {
+    const userIdParam = parseInt(req.params.id);
+    req.log.info({ action: `GET /api/users/${userIdParam}` }, 'User Profile endpoint accessed');
     try {
-        const userIdParam = parseInt(req.params.id);
         const userData = await users.findOne({ id: userIdParam });
 
         if (!userData) {
-            return res.status(404).json({ id: 404, message: "User not found" });
+            const err = new Error("User not found");
+            err.status = 404;
+            return next(err);
         }
 
         const totalCosts = await costs.aggregate([
@@ -48,9 +54,8 @@ router.get('/users/:id', async (req, res) => {
             id: userData.id,
             total: totalAmount
         });
-
     } catch (error) {
-        res.status(500).json({ id: 500, message: error.message });
+        next(error);
     }
 });
 
