@@ -17,7 +17,10 @@ const usersSchema = new mongoose.Schema({
     birthday: {
         type: Date,
         required: true
-    }
+    },
+    total: {
+        type: Number,
+        default: 0 }
 });
 
 // Export the model so it can be used in your routes

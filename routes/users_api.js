@@ -41,18 +41,12 @@ router.get('/users/:id', async (req, res, next) => {
             return next(err);
         }
 
-        const totalCosts = await costs.aggregate([
-            { $match: { userid: userIdParam } },
-            { $group: { _id: null, totalSum: { $sum: "$sum" } } }
-        ]);
-
-        const totalAmount = totalCosts.length > 0 ? totalCosts[0].totalSum : 0;
-
+        // NO .aggregate()! Just grab the pre-computed total field.
         res.status(200).json({
             first_name: userData.first_name,
             last_name: userData.last_name,
             id: userData.id,
-            total: totalAmount
+            total: userData.total || 0
         });
     } catch (error) {
         next(error);
