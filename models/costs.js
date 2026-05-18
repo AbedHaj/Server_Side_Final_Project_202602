@@ -10,7 +10,7 @@ const costsSchema = new mongoose.Schema({
         required: true,
         enum: ['food', 'health', 'housing', 'sports', 'education']
     },
-    userid: {   //change this
+    userid: {
         type: Number,
         required: true
     },
