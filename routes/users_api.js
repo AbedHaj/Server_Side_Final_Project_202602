@@ -5,9 +5,9 @@ const costs = require('../models/costs');
 
 // POST /api/add (Add User) 3002
 router.post('/add', async (req, res, next) => {
-    req.log.info({ action: "POST /api/add" }, 'Add User endpoint accessed');
+    req.log.info({ action: 'POST /api/add' }, 'Add User endpoint accessed');
     try {
-        const { id, first_name, last_name, birthday } = req.body;
+        const { id, first_name, last_name, birthday } = req.body; //change this
         const newUser = new users({ id: Number(id), first_name, last_name, birthday: new Date(birthday) });
         const savedUser = await newUser.save();
         res.status(201).json(savedUser);
@@ -19,7 +19,7 @@ router.post('/add', async (req, res, next) => {
 
 // GET /api/users
 router.get('/users', async (req, res, next) => {
-    req.log.info({ action: "GET /api/users" }, 'Get Users endpoint accessed');
+    req.log.info({ action: 'GET /api/users' }, 'Get Users endpoint accessed');
     try {
         const allUsers = await users.find({});
         res.status(200).json(allUsers);
@@ -36,7 +36,7 @@ router.get('/users/:id', async (req, res, next) => {
         const userData = await users.findOne({ id: userIdParam });
 
         if (!userData) {
-            const err = new Error("User not found");
+            const err = new Error('User not found');
             err.status = 404;
             return next(err);
         }

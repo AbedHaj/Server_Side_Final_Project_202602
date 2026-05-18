@@ -8,9 +8,9 @@ const costsSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['food', 'health', 'housing', 'sports', 'education'] // Enforces allowed categories
+        enum: ['food', 'health', 'housing', 'sports', 'education']
     },
-    userid: {
+    userid: {   //change this
         type: Number,
         required: true
     },

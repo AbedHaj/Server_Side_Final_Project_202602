@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const reportSchema = new mongoose.Schema({
-    userid: { type: Number, required: true },
+    userid: { type: Number, required: true },         //change this
     year: { type: Number, required: true },
     month: { type: Number, required: true },
     costs: {

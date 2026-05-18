@@ -8,9 +8,9 @@ const users = require('../models/users');
 
 // POST /api/add (Add Cost) 3003
 router.post('/add', async (req, res, next) => {
-    req.log.info({ action: "POST /api/add" }, 'Add Cost endpoint accessed');
+    req.log.info({ action: 'POST /api/add' }, 'Add Cost endpoint accessed');
     try {
-        const { description, category, userid, sum } = req.body;
+        const { description, category, userid, sum } = req.body;  //change this
         const numUserId = Number(userid);
         const numSum = Number(sum);
 
@@ -52,11 +52,11 @@ router.get('/report', async (req, res, next) => {
     const year = parseInt(req.query.year);
     const month = parseInt(req.query.month);
 
-    req.log.info({ action: "GET /api/report", params: { userid, year, month } }, 'Report endpoint accessed');
+    req.log.info({ action: 'GET /api/report', params: { userid, year, month } }, 'Report endpoint accessed');
 
     try {
         if (!userid || !year || !month) {
-            const err = new Error("Missing parameters");
+            const err = new Error('Missing parameters');
             err.status = 400;
             return next(err);
         }

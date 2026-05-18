@@ -6,11 +6,11 @@ const usersSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    first_name: {
+    first_name: { //change this
         type: String,
         required: true
     },
-    last_name: {
+    last_name: { //change this
         type: String,
         required: true
     },
@@ -23,5 +23,4 @@ const usersSchema = new mongoose.Schema({
         default: 0 }
 });
 
-// Export the model so it can be used in your routes
 module.exports = mongoose.model('users', usersSchema);
