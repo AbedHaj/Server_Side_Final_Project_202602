@@ -41,7 +41,7 @@ router.get('/users/:id', async (req, res, next) => {
             return next(err);
         }
 
-        // NO .aggregate()! Just grab the pre-computed total field.
+        // fetch  the pre-computed total field for the purrchases.
         res.status(200).json({
             first_name: userData.first_name,
             last_name: userData.last_name,

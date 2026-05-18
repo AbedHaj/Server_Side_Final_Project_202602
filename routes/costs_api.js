@@ -52,20 +52,20 @@ router.get('/report', async (req, res, next) => {
     const year = parseInt(req.query.year);
     const month = parseInt(req.query.month);
 
-    req.log.info({ action: 'GET /api/report', params: { userid, year, month } }, 'Report endpoint accessed');
+    req.log.info({ action: 'GET /api/report', params: { userid, year, month } }, 'Report endpoint accessed');  //log report access
 
-    try {
+    try { // Making sure the parametrs are valid
         if (!userid || !year || !month) {
             const err = new Error('Missing parameters');
             err.status = 400;
             return next(err);
         }
 
-        // Fetch the pre-computed report! No filtering dates or sorting arrays.
+        // Fetch the calculated report
         const savedReport = await reports.findOne({ userid, year, month });
 
         if (savedReport) {
-            // Format it into the specific array structure the tests expect
+            // Formatting
             return res.status(200).json({
                 userid: savedReport.userid,
                 year: savedReport.year,

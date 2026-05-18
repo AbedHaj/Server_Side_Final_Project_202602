@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const logsSchema = new mongoose.Schema({
     action: {
-        type: String, // e.g., "POST /api/add"
+        type: String, // Example: "POST /api/add"
         required: true
     },
     timestamp: {
