@@ -3,7 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "start:admin": "node server_admin.js",
+    "start:users": "node server_users.js",
+    "start:costs": "node server_costs.js",
+    "start:dev": "node server-dev.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

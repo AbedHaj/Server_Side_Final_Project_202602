@@ -23,4 +23,5 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(3004, () => console.log('Dev Process running on port 3004'));
+const port = process.env.PORT || 3004;
+app.listen(port, () => console.log(`Dev Process running on port ${port}`));

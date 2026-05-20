@@ -27,4 +27,5 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(3003, () => console.log('Costs Process running on port 3003'));
+const port = process.env.PORT || 3003;
+app.listen(port, () => console.log(`Costs Process running on port ${port}`));

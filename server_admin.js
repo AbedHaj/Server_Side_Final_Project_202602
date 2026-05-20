@@ -27,4 +27,5 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(3001, () => console.log('Admin Process running on port 3001'));
+const port = process.env.PORT || 3001;
+app.listen(port, () => console.log(`Admin Process running on port ${port}`));
