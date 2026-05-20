@@ -3,10 +3,10 @@ import requests
 import random
 
 
-ADMIN_URL = 'http://localhost:3001/api'
-USER_URL = 'http://localhost:3002/api'
-COST_URL = 'http://localhost:3003/api'
-DEV_URL = 'http://localhost:3004/api'
+ADMIN_URL = 'https://server-side-final-project-202602-admin.onrender.com/api'  #http://localhost:3001/api
+USER_URL = 'https://server-side-final-project-202602-users.onrender.com/api' #http://localhost:3002/api
+COST_URL = 'https://server-side-final-project-202602-costs.onrender.com/api' #http://localhost:3003/api
+DEV_URL = 'https://server-side-final-project-202602-dev.onrender.com/api' #http://localhost:3004/api
 
 class TestBackendAPI(unittest.TestCase):
 
