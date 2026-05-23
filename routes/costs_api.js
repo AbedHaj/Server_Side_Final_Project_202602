@@ -10,21 +10,24 @@ const users = require('../models/users');
 router.post('/add', async (req, res, next) => {
     req.log.info({ action: 'POST /api/add' }, 'Add Cost endpoint accessed');
     try {
-        const { description, category, userid, sum } = req.body;  //change this
+        const description = req.body.description;
+        const category = req.body.category;
+        const userId = req.body.userId || req.body.userid;
+        const sum = req.body.sum;
         const numUserId = Number(userid);
         const numSum = Number(sum);
 
-        // 1. Save the actual cost
+        // save the actual cost
         const newCost = new costs({ description, category, userid: numUserId, sum: numSum });
         const savedCost = await newCost.save();
 
-        // 2. COMPUTED PATTERN A: Update User's Total instantly
+        // Update User's Total instantly
         await users.findOneAndUpdate(
             { id: numUserId },
             { $inc: { total: numSum } }
         );
 
-        // 3. COMPUTED PATTERN B: Update Monthly Report instantly
+        // Update Monthly Report instantly
         const date = new Date();
         const year = date.getFullYear();
         const month = date.getMonth() + 1; // getMonth is 0-indexed
@@ -39,7 +42,13 @@ router.post('/add', async (req, res, next) => {
             { upsert: true, setDefaultsOnInsert: true } // Create report if it doesn't exist
         );
 
-        res.status(201).json(savedCost);
+        res.status(201).json({
+            description: savedCost.description,
+            category: savedCost.category,
+            userId: savedCost.userid,
+            sum: savedCost.sum,
+            _id: savedCost._id
+        });
     } catch (error) {
         error.status = 400;
         next(error);

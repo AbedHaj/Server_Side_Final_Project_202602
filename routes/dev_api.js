@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const teamMembers = [
-    { first_name: 'Abed el hafeeth', last_name: 'Haj Yahia' },
-    { first_name: 'Lior', last_name: 'Mizrachi' }
+    { first_name: 'Abed el hafeeth', lastName: 'Haj Yahia' },
+    { first_name: 'Lior', lastName: 'Mizrachi' }
 ];
 
 // GET /api/about 3004

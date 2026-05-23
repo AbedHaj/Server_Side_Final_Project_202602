@@ -7,10 +7,15 @@ const costs = require('../models/costs');
 router.post('/add', async (req, res, next) => {
     req.log.info({ action: 'POST /api/add' }, 'Add User endpoint accessed');
     try {
-        const { id, first_name, last_name, birthday } = req.body; //change this
-        const newUser = new users({ id: Number(id), first_name, last_name, birthday: new Date(birthday) });
+        const { id, firsName, lastName, birthday } = req.body; //change this
+        const newUser = new users({ id: Number(id), firstName, lastName, birthday: new Date(birthday) });
         const savedUser = await newUser.save();
-        res.status(201).json(savedUser);
+        res.status(201).json({
+            id: savedUser.id,
+            firstName: savedUser.first_name,
+            lastName: savedUser.last_name,
+            birthday: savedUser.birthday
+        });
     } catch (error) {
         error.status = 400;
         next(error);
@@ -22,7 +27,12 @@ router.get('/users', async (req, res, next) => {
     req.log.info({ action: 'GET /api/users' }, 'Get Users endpoint accessed');
     try {
         const allUsers = await users.find({});
-        res.status(200).json(allUsers);
+        res.status(200).json(allUsers.map(user => ({
+            id: user.id,
+            firstName: user.first_name,
+            lastName: user.last_name,
+            birthday: user.birthday
+        })));
     } catch (error) {
         next(error);
     }
@@ -43,8 +53,8 @@ router.get('/users/:id', async (req, res, next) => {
 
         // fetch  the pre-computed total field for the purrchases.
         res.status(200).json({
-            first_name: userData.first_name,
-            last_name: userData.last_name,
+            firstName: userData.first_name,
+            lastName: userData.last_name,
             id: userData.id,
             total: userData.total || 0
         });
