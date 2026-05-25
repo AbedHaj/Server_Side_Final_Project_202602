@@ -8,7 +8,12 @@ router.post('/add', async (req, res, next) => {
     req.log.info({ action: 'POST /api/add' }, 'Add User endpoint accessed');
     try {
         const { id, firstName, lastName, birthday } = req.body; //change this
-        const newUser = new users({ id: Number(id), firstName, lastName, birthday: new Date(birthday) });
+        const newUser = new users({
+            id: Number(id),
+            first_name: firstName,
+            last_name: lastName,
+            birthday: new Date(birthday)
+        });
         const savedUser = await newUser.save();
         res.status(201).json({
             id: savedUser.id,
