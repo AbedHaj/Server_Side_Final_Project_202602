@@ -7,18 +7,18 @@ const costs = require('../models/costs');
 router.post('/add', async (req, res, next) => {
     req.log.info({ action: 'POST /api/add' }, 'Add User endpoint accessed');
     try {
-        const { id, firstName, lastName, birthday } = req.body; //change this
+        const { id, first_name, last_name, birthday } = req.body; //change this
         const newUser = new users({
             id: Number(id),
-            first_name: firstName,
-            last_name: lastName,
+            first_name: first_name,
+            last_name: last_name,
             birthday: new Date(birthday)
         });
         const savedUser = await newUser.save();
         res.status(201).json({
             id: savedUser.id,
-            firstName: savedUser.first_name,
-            lastName: savedUser.last_name,
+            first_name: savedUser.first_name,
+            last_name: savedUser.last_name,
             birthday: savedUser.birthday
         });
     } catch (error) {
