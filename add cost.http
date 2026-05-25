@@ -1,0 +1,9 @@
+POST https://server-side-final-project-202602-costs.onrender.com/api/add
+Content-Type: application/json
+
+{
+  "userid": 12345,
+  "description": "bread",
+  "category": "food",
+  "sum": 8
+}

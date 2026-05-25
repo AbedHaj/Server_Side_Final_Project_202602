@@ -1,0 +1,9 @@
+POST https://server-side-final-project-202602-users.onrender.com/api/add
+Content-Type: application/json
+
+{
+"id": 12345,
+"firstName": "Alex",
+"lastName": "John",
+"birthday": "1995-05-05"
+}
