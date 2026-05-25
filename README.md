@@ -98,14 +98,15 @@ Mongoose schemas:
 
 ## Testing
 
-Run tests against deployed services:
+Run tests on deployed services:
 
 ```powershell
 python tests/run_tests.py
+ py -m unittest discover tests 
 ```
 
 
 ## Authors
 
-- Abed el hafeeth Haj Yahia
+- Abed Haj Yahia
 - Lior Mizrachi
