@@ -14,8 +14,6 @@ router.post('/add', async (req, res, next) => {
         const category = req.body.category;
         const userId = req.body.userId || req.body.userid; // Capital I
         const sum = req.body.sum;
-
-        // FIX: Use the matching camelCase variable name here
         const numUserId = Number(userId);
         const numSum = Number(sum);
 
