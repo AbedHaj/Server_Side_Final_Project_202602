@@ -12,7 +12,7 @@ router.post('/add', async (req, res, next) => {
     try {
         const description = req.body.description;
         const category = req.body.category;
-        const userId = req.body.userId || req.body.userid;
+        const userId = req.body.userId || req.body.userId;
         const sum = req.body.sum;
         const numUserId = Number(userid);
         const numSum = Number(sum);
